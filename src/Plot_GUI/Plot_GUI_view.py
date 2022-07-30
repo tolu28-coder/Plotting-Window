@@ -21,6 +21,7 @@ class SingleMplCanvas(QtWidgets.QWidget):
         
     def plot(self, x, y, label=None):
         self.plot_object.plot(x, y, label)
+        self.canvas.draw()
     
     def set_title(self, title):
         self.plot_object.set_title(title)

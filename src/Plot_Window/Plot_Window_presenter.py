@@ -17,7 +17,7 @@ class PlotWindowPresenter(object):
 
 
     def plot_data(self):
-        print("in plotting")
+        self.view.plot([1,2,3,4,5], [1,2,3,4,5])
 
     def fit_data(self):
         print("in fitting")

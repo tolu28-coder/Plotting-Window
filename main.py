@@ -1,4 +1,5 @@
 from Plot_Window.Plot_Window import PlotWindow
+from Misc import exception_hook
 from qtpy.QtWidgets import QMainWindow, QApplication
 import sys
 
@@ -12,6 +13,8 @@ class MainWindow(QMainWindow):
 
         self.show()
 
+sys._excepthook = sys.excepthook
+sys.excepthook = exception_hook
 
 app = QApplication(sys.argv)
 w = MainWindow()

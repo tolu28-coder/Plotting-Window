@@ -11,8 +11,9 @@ class PlotWindowView(QtWidgets.QWidget):
         self.plot_canvas = SingleMplCanvas(self)
         self.overall_layout.addWidget(self.menuBar)
         self.overall_layout.addWidget(self.plot_canvas)
+        self.setLayout(self.overall_layout)
 
-
+    # slots
     def plot_data_slot(self, slot):
         self.plot_action.triggered.connect(slot)
 
@@ -53,12 +54,8 @@ class PlotWindowView(QtWidgets.QWidget):
 
         self.add_lines_menu = self.menuBar.addMenu("&Add lines")
 
-
-
-
-
     def open_file(self):
         pass
 
-    def plot(self):
-        pass
+    def plot(self, x, y, label=""):
+        self.plot_canvas.plot(x, y, label)
