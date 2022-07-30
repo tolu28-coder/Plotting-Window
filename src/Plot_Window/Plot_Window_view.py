@@ -1,45 +1,64 @@
-from qtpy.QtWidgets import QWidget, QMenu, QAction
+from qtpy import QtWidgets, QtCore
 from Plot_GUI.Plot_GUI_view import SingleMplCanvas
 
 
-class PlotWindow(QWidget):
+class PlotWindowView(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
-        super(PlotWindow, self).__init__(parent)
-        self.plot = SingleMplCanvas(self)
+        super(PlotWindowView, self).__init__(parent)
+        self.overall_layout = QtWidgets.QVBoxLayout(self)
+        self._createMenuBar()
+        self.plot_canvas = SingleMplCanvas(self)
+        self.overall_layout.addWidget(self.menuBar)
+        self.overall_layout.addWidget(self.plot_canvas)
+
+
+    def plot_data_slot(self, slot):
+        self.plot_action.triggered.connect(slot)
+
+    def fit_data_slot(self, slot):
+        self.fit_action.triggered.connect(slot)
+
+    def plot_custom_data_slot(self, slot):
+        self.custom_plot_action.triggered.connect(slot)
+
+    def remove_background_slot(self, slot):
+        self.remove_background.triggered.connect(slot)
 
     def _createMenuBar(self):
-        self.menuBar = self.menuBar()
+        self.menuBar = QtWidgets.QMenuBar()
         # Creating menus using a QMenu object
-        plot_menu = QMenu("&Plot", self)
-        plot_action = QAction("Plot data")
-        plot_action.setStatusTip('Add data to plot')
-        plot_action.triggered.connect(self.handle_plot_data)
+        self.plot_menu = self.menuBar.addMenu("&Plotting")
+        self.plot_action = QtWidgets.QAction("Plot data", self)
+        self.plot_action.setStatusTip('Add data to plot')
+        #self.plot_action.triggered.connect(self.handle_plot_data)
+        self.plot_menu.addAction(self.plot_action)
 
-        custom_plot_action = QAction("&Custom data")
-        custom_plot_action.setStatusTip('Plot custom data')
-        custom_plot_action.triggered.connect(self.handle_custom_plot_data)
+        self.custom_plot_action = QtWidgets.QAction("&Custom data", self)
+        self.custom_plot_action.setStatusTip('Plot custom data')
+        #self.custom_plot_action.triggered.connect(self.handle_custom_plot_data)
+        self.plot_menu.addAction(self.custom_plot_action)
 
-        self.menuBar.addMenu(plot_menu)
         # Creating menus using a title
-        fit_menu = self.menuBar.addMenu("&Fit")
-        fit_action = QAction("Fit data")
-        #fit_action.setStatusTip('Add data to plot')
-        fit_action.triggered.connect(self.plot_data)
+        self.fit_menu = self.menuBar.addMenu("&Fitting")
+        self.fit_action = QtWidgets.QAction("Fit data", self)
+        self.fit_action.setStatusTip('Fit plotted data')
+        #fit_action.triggered.connect(self.plot_data)
+        self.fit_menu.addAction(self.fit_action)
 
-        helpMenu = self.menuBar.addMenu("&Add lines")
+        self.correct_menu = self.menuBar.addMenu("&Corrections")
+        self.remove_background = QtWidgets.QAction("Remove background")
+        self.remove_background.setStatusTip("Remove background from data")
+        self.correct_menu.addAction(self.remove_background)
+
+        self.add_lines_menu = self.menuBar.addMenu("&Add lines")
+
+
+
+
 
     def open_file(self):
         pass
 
-    def plot_data(self):
-        pass
-
-    def custom_plot_data(self):
-        pass
-
-    def handle_plot_data(self):
-        pass
-
-    def handle_custom_plot_data(self):
+    def plot(self):
         pass
