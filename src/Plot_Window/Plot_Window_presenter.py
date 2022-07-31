@@ -1,11 +1,11 @@
 from Plot_Window.Plot_Window_view import PlotWindowView
 from Plot_Window.Plot_Window_model import PlotWindowModel
-from UserInputWidgets.Large_user_Input import PlotDataUserInput
+from UserInputWidgets.Large_user_input import PlotDataUserInput
 
 
 class PlotWindowPresenter(object):
 
-    def __init__(self, view: PlotWindowView, model: PlotWindowModel):
+    def __init__(self, view, model):
         self.view = view
         self.model = model
         self._initialise_signals()

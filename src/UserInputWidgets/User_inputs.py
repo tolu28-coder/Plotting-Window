@@ -14,16 +14,16 @@ class UserInput(QtWidgets.QWidget):
         self.set_label_text(text)
 
     def _initialise(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def set_label_text(self, text):
         self.label.setText(text)
 
     def set_input(self, text):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_input(self):
-        raise NotImplemented
+        raise NotImplementedError
 
 
 class UserInputText(UserInput):

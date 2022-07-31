@@ -19,10 +19,10 @@ class LargeInput(QtWidgets.QWidget):
         self.done_button.clicked.connect(self.close)
 
     def _initialise(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_input(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def done_button_slot(self, slot):
         self.done_button.clicked.connect(slot)

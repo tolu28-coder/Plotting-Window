@@ -14,7 +14,7 @@ class PlotWindowModel(object):
         if filetype in TEXT_FILE_FORMAT:
             x, y = self.open_text_file(file_name, skiprow, columns)
         else:
-            raise NotImplemented
+            raise NotImplementedError
         return x, y
 
     def open_text_file(self, file, skiprow, columns):
@@ -25,6 +25,16 @@ class PlotWindowModel(object):
     def add_dataset(self, x, y, label):
         dataset = Dataset(x, y, label)
         self.datasets[label] = dataset
+
+    def remove_dataset(self, label):
+        if label in self.datasets:
+            del self.datasets[label]
+
+    def get_list_of_datasets_present(self):
+        return list(self.datasets.keys())
+
+    def get_dataset(self, label):
+        return self.datasets[label]
 
 
 
