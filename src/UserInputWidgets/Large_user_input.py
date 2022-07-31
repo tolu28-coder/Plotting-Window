@@ -1,6 +1,6 @@
-from qtpy import QtWidgets, QtCore
-from UserInputWidgets.User_inputs import UserInputFileDirectory, UserInputInt, UserInputCombobox, UserInputText
+from qtpy import QtWidgets
 
+from UserInputWidgets.User_inputs import UserInputFileDirectory, UserInputInt, UserInputCombobox, UserInputText
 
 ALLOWED_FILE_TYPES = ["txt", "csv"]
 
@@ -46,12 +46,9 @@ class PlotDataUserInput(LargeInput):
         self.layout.addWidget(self.x_column_input)
         self.layout.addWidget(self.y_column_input)
 
-
     def get_input(self):
-        parameters = {}
-        parameters["filetype"] = self.file_type_input.get_input()
-        parameters["filename"] = self.file_input.get_input()
-        parameters["row"] = self.row_input.get_input()
-        parameters["column"] = (self.x_column_input.get_input(), self.y_column_input.get_input())
-        parameters["label"] = self.label_input.get_input()
+        parameters = {"filetype": self.file_type_input.get_input(), "filename": self.file_input.get_input(),
+                      "row": self.row_input.get_input(),
+                      "column": (self.x_column_input.get_input(), self.y_column_input.get_input()),
+                      "label": self.label_input.get_input()}
         return parameters

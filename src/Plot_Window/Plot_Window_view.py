@@ -1,4 +1,5 @@
-from qtpy import QtWidgets, QtCore
+from qtpy import QtWidgets
+
 from Plot_GUI.Plot_GUI_view import SingleMplCanvas
 
 
@@ -32,19 +33,19 @@ class PlotWindowView(QtWidgets.QWidget):
         self.plot_menu = self.menuBar.addMenu("&Plotting")
         self.plot_action = QtWidgets.QAction("Plot data", self)
         self.plot_action.setStatusTip('Add data to plot')
-        #self.plot_action.triggered.connect(self.handle_plot_data)
+        # self.plot_action.triggered.connect(self.handle_plot_data)
         self.plot_menu.addAction(self.plot_action)
 
         self.custom_plot_action = QtWidgets.QAction("&Custom data", self)
         self.custom_plot_action.setStatusTip('Plot custom data')
-        #self.custom_plot_action.triggered.connect(self.handle_custom_plot_data)
+        # self.custom_plot_action.triggered.connect(self.handle_custom_plot_data)
         self.plot_menu.addAction(self.custom_plot_action)
 
         # Creating menus using a title
         self.fit_menu = self.menuBar.addMenu("&Fitting")
         self.fit_action = QtWidgets.QAction("Fit data", self)
         self.fit_action.setStatusTip('Fit plotted data')
-        #fit_action.triggered.connect(self.plot_data)
+        # fit_action.triggered.connect(self.plot_data)
         self.fit_menu.addAction(self.fit_action)
 
         self.correct_menu = self.menuBar.addMenu("&Corrections")

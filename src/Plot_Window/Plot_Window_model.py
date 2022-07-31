@@ -1,7 +1,5 @@
 import numpy as np
 
-
-
 TEXT_FILE_FORMAT = ["txt", "csv"]
 
 
@@ -17,7 +15,8 @@ class PlotWindowModel(object):
             raise NotImplementedError
         return x, y
 
-    def open_text_file(self, file, skiprow, columns):
+    @staticmethod
+    def open_text_file(file, skiprow, columns):
         data = np.loadtxt(file, skiprows=skiprow)
         x, y = data[:, columns[0]], data[:, columns[1]]
         return x, y
@@ -35,7 +34,6 @@ class PlotWindowModel(object):
 
     def get_dataset(self, label):
         return self.datasets[label]
-
 
 
 class Dataset(object):

@@ -13,6 +13,7 @@ class MainWindow(QMainWindow):
 
         self.show()
 
+
 sys._excepthook = sys.excepthook
 sys.excepthook = exception_hook
 

@@ -20,7 +20,6 @@ class PlotWindowModelTest(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             self.model.open_file("mock_file", "not_txt", "mock_row", "mock_column")
 
-
     def test_open_text_file(self):
         pass
 

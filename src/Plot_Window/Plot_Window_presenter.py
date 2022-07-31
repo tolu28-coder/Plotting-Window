@@ -1,5 +1,3 @@
-from Plot_Window.Plot_Window_view import PlotWindowView
-from Plot_Window.Plot_Window_model import PlotWindowModel
 from UserInputWidgets.Large_user_input import PlotDataUserInput
 
 
