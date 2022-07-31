@@ -8,7 +8,7 @@ TEXT_FILE_FORMAT = ["txt", "csv"]
 class PlotWindowModel(object):
 
     def __init__(self):
-        self.datasets = []
+        self.datasets = {}
 
     def open_file(self, file_name, filetype, skiprow, columns):
         if filetype in TEXT_FILE_FORMAT:
@@ -24,7 +24,7 @@ class PlotWindowModel(object):
 
     def add_dataset(self, x, y, label):
         dataset = Dataset(x, y, label)
-        self.datasets.append(dataset)
+        self.datasets[label] = dataset
 
 
 
@@ -37,3 +37,6 @@ class Dataset(object):
 
     def get_data(self):
         return self.xdata, self.ydata
+
+    def __str__(self):
+        return self.label
