@@ -12,6 +12,7 @@ class SinglePlot(object):
         if label is None:
             self.axes.plot(x, y)
         else:
+            print(label)
             self.axes.plot(x, y, label=label)
     
     def set_xlabel(self, label):

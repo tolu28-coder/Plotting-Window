@@ -57,5 +57,5 @@ class PlotWindowView(QtWidgets.QWidget):
     def open_file(self):
         pass
 
-    def plot(self, x, y, label=""):
+    def plot(self, x, y, label=None):
         self.plot_canvas.plot(x, y, label)

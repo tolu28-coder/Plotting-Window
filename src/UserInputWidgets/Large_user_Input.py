@@ -1,5 +1,5 @@
 from qtpy import QtWidgets, QtCore
-from UserInputWidgets.User_inputs import UserInputFileDirectory, UserInputInt, UserInputCombobox
+from UserInputWidgets.User_inputs import UserInputFileDirectory, UserInputInt, UserInputCombobox, UserInputText
 
 
 ALLOWED_FILE_TYPES = ["txt", "csv"]
@@ -33,6 +33,7 @@ class PlotDataUserInput(LargeInput):
     def _initialise(self):
         self.file_type_input = UserInputCombobox(self, "Select File type")
         self.file_type_input.add_options(ALLOWED_FILE_TYPES)
+        self.label_input = UserInputText(self, "Plot label")
         self.row_input = UserInputInt(self, "Select number of rows to ignore")
         self.x_column_input = UserInputInt(self, "Select x column index")
         self.y_column_input = UserInputInt(self, "Select y column index")
@@ -40,6 +41,7 @@ class PlotDataUserInput(LargeInput):
 
         self.layout.addWidget(self.file_type_input)
         self.layout.addWidget(self.file_input)
+        self.layout.addWidget(self.label_input)
         self.layout.addWidget(self.row_input)
         self.layout.addWidget(self.x_column_input)
         self.layout.addWidget(self.y_column_input)
@@ -51,4 +53,5 @@ class PlotDataUserInput(LargeInput):
         parameters["filename"] = self.file_input.get_input()
         parameters["row"] = self.row_input.get_input()
         parameters["column"] = (self.x_column_input.get_input(), self.y_column_input.get_input())
+        parameters["label"] = self.label_input.get_input()
         return parameters

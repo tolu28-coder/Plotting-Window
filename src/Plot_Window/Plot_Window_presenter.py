@@ -29,8 +29,11 @@ class PlotWindowPresenter(object):
     def handle_plot_data(self):
         parameters = self.plot_large_input.get_input()
         x, y = self.model.open_file(parameters["filename"], parameters["filetype"], parameters["row"], parameters["column"])
-        self.plot(x, y)
+        label = parameters["label"]
+        self.plot(x, y, label)
+        self.model.add_dataset(x, y, label)
         self.plot_large_input = None
+
 
     def fit_data(self):
         print("in fitting")
@@ -42,5 +45,5 @@ class PlotWindowPresenter(object):
         print("in remove background")
 
     def plot(self, x, y, label=""):
-        self.view.plot(x, y)
+        self.view.plot(x, y, label)
 
