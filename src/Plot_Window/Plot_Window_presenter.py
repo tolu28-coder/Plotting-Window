@@ -1,5 +1,6 @@
 from Plot_Window.Plot_Window_view import PlotWindowView
 from Plot_Window.Plot_Window_model import PlotWindowModel
+from UserInputWidgets.Large_user_Input import PlotDataUserInput
 
 
 class PlotWindowPresenter(object):
@@ -8,6 +9,10 @@ class PlotWindowPresenter(object):
         self.view = view
         self.model = model
         self._initialise_signals()
+        self.setup_user_input()
+
+    def setup_user_input(self):
+        self.plot_large_input = None
 
     def _initialise_signals(self):
         self.view.plot_data_slot(self.plot_data)
@@ -15,9 +20,17 @@ class PlotWindowPresenter(object):
         self.view.plot_custom_data_slot(self.plot_custom_data)
         self.view.remove_background_slot(self.remove_background)
 
-
     def plot_data(self):
-        self.view.plot([1,2,3,4,5], [1,2,3,4,5])
+        if self.plot_large_input is not None:
+            return
+        self.plot_large_input = PlotDataUserInput()
+        self.plot_large_input.done_button_slot(self.handle_plot_data)
+
+    def handle_plot_data(self):
+        parameters = self.plot_large_input.get_input()
+        x, y = self.model.open_file(parameters["filename"], parameters["filetype"], parameters["row"], parameters["column"])
+        self.plot(x, y)
+        self.plot_large_input = None
 
     def fit_data(self):
         print("in fitting")
@@ -27,4 +40,7 @@ class PlotWindowPresenter(object):
 
     def remove_background(self):
         print("in remove background")
+
+    def plot(self, x, y, label=""):
+        self.view.plot(x, y)
 
