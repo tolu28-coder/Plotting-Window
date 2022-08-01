@@ -7,57 +7,77 @@ class MyThread(object):
     """
         class to be defined to be used as a mixin class using threadpadding decorator or can be used as a thread object
     """
+    _execute_after_thread = []
+    _execute_before_thread = []
+    _execute_if_error = []
+    _execute_if_success = []
+
+    @staticmethod
+    def _null():
+        raise NotImplementedError
 
     def __init__(self):
         self._thread = None
         self._queue = Queue()
 
+    @staticmethod
+    def add_to_list(func_list, index):
+        """Decorator that adds the function to a given list"""
+        def actual_decorator(f):
+            func_list[index] = f
+            return f
+        return actual_decorator
 
     @staticmethod
-    def thread_padding_no_return(func):
+    def thread_padding_no_return(before, success, if_error, after):
         # use this decorator if object inherits from MyThread class
-        def wrapped_func(self, *args, **kwargs):
-            self.before_thread()
-            try:
-                func(*args, **kwargs)
+        def decorator(func):
+            def wrapped_func(self, *args, **kwargs):
+                self._execute_before_thread[before](self)
+                try:
+                    func(*args, **kwargs)
+                    self._execute_if_success[success](self)
 
-            except Exception as error:
-                self.incase_of_error(error)
+                except Exception as error:
+                    self._execute_if_error[if_error](self, error)
 
-            finally:
-                self.after_thread()
+                finally:
+                    self._execute_after_thread[after](self)
 
-        def thread_wrapped(self, *args, **kwargs):
-            args = [self] + list(args)
-            thread = threading.Thread(target=wrapped_func, args=args, kwargs=kwargs)
-            thread.start()
+            def thread_wrapped(self, *args, **kwargs):
+                args = [self] + list(args)
+                thread = threading.Thread(target=wrapped_func, args=args, kwargs=kwargs)
+                thread.start()
+            return thread_wrapped
 
-        return thread_wrapped
+        return decorator
 
     @staticmethod
-    def thread_padding_return(func):
-        # use this decorator if object inherits from MyThread class
-        def wrapped_func(self, *args, **kwargs):
-            self.before_thread()
-            try:
-                return_val = func(self, *args, **kwargs)
-                self._queue.put(return_val)
-                self.thread_success()
+    def thread_padding_return(before, success, if_error, after):
+        # use this decorator if object inherits from MyThread class and returns a value
 
-            except Exception as error:
-                print("In exception")
-                self.incase_of_error(error)
+        def decorator(func):
+            def wrapped_func(self, *args, **kwargs):
+                self._execute_before_thread[before](self)
+                try:
+                    return_val = func(self, *args, **kwargs)
+                    self._queue.put(return_val)
+                    self._execute_if_success[success](self)
 
-            finally:
-                self.after_thread()
-                self._thread = None
+                except Exception as error:
+                    self._execute_if_error[if_error](self, error)
 
-        def thread_wrapped(self, *args, **kwargs):
-            args = tuple([self] + list(args))
-            self._thread = threading.Thread(target=wrapped_func, args=args, kwargs=kwargs, daemon=True)
-            self._thread.start()
+                finally:
+                    self._execute_after_thread[after](self)
 
-        return thread_wrapped
+            def thread_wrapped(self, *args, **kwargs):
+                args = [self] + list(args)
+                thread = threading.Thread(target=wrapped_func, args=args, kwargs=kwargs)
+                thread.start()
+
+            return thread_wrapped
+
+        return decorator
 
     def before_thread(self):
         raise NotImplementedError

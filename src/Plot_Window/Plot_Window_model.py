@@ -2,16 +2,25 @@ import numpy as np
 from Mythreads import MyThread, Messenger
 
 TEXT_FILE_FORMAT = ["txt", "csv"]
+NUMBER_OF_AFTER_THREAD_METHODS = 1
+NUMBER_OF_BEFORE_THREAD_METHODS = 1
+NUMBER_OF_IF_ERROR_THREAD_METHODS = 1
+NUMBER_OF_IF_SUCCESS_THREAD_METHODS = 1
 
 
 class PlotWindowModel(MyThread):
+
+    _execute_after_thread = [MyThread._null] * NUMBER_OF_AFTER_THREAD_METHODS
+    _execute_before_thread = [MyThread._null] * NUMBER_OF_BEFORE_THREAD_METHODS
+    _execute_if_error = [MyThread._null] * NUMBER_OF_IF_ERROR_THREAD_METHODS
+    _execute_if_success = [MyThread._null] * NUMBER_OF_IF_SUCCESS_THREAD_METHODS
 
     def __init__(self):
         MyThread.__init__(self)
         self.datasets = {}
         self.open_file_messenger = Messenger()
 
-    @MyThread.thread_padding_return
+    @MyThread.thread_padding_return(0,  0,  0,  0)
     def open_file(self, file_name, filetype, skiprow, columns, label):
         if filetype in TEXT_FILE_FORMAT:
             x, y = self.open_text_file(file_name, skiprow, columns)
@@ -39,13 +48,16 @@ class PlotWindowModel(MyThread):
     def get_dataset(self, label):
         return self.datasets[label]
 
+    @MyThread.add_to_list(_execute_before_thread, 0)
     def before_thread(self):
-        #print("In before thread")
+        print("In before thread")
         pass
 
-    def thread_success(self):
+    @MyThread.add_to_list(_execute_if_success, 0)
+    def open_file_success(self):
         self.open_file_messenger.notify()
 
+    @MyThread.add_to_list(_execute_if_error, 0)
     def incase_of_error(self, exception):
         print("here")
         raise exception
@@ -53,6 +65,7 @@ class PlotWindowModel(MyThread):
     def get_from_queue(self):
         return self._queue.get()
 
+    @MyThread.add_to_list(_execute_after_thread, 0)
     def after_thread(self):
         pass
 
