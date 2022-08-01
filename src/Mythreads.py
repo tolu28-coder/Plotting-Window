@@ -94,6 +94,7 @@ class MyThread(object):
         self.after_thread = after
         self.incase_of_error = incase_of_error
 
+    # start will not work, will fix it later
     def start(self):
         # lambda function should be used to pass arguments or should use class attributes
         self.before_thread()
