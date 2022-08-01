@@ -20,8 +20,15 @@ class PlotWindowPresenterTest(unittest.TestCase):
         self.presenter.model.open_file.return_value = mock_data
         self.presenter.plot_large_input = mock.Mock()
         self.presenter.plot_large_input.get_input.return_value = mock_params
-        self.presenter.handle_plot_data()
-        self.presenter.model.open_file.assert_called_once_with("mock_file", "mock_filetype", "mock_row", "mock_column")
+        self.presenter.call_handle_plot()
+        self.presenter.model.open_file.assert_called_once_with("mock_file", "mock_filetype", "mock_row", "mock_column",
+                                                               "mock_label")
+        self.assertIs(self.presenter.plot_large_input, None)
+
+
+    def test_open_file_done(self):
+        self.presenter.model.get_from_queue.return_value = [0, 1, "mock_label"]
+        self.presenter.open_file_done()
         self.presenter.view.plot.assert_called_once_with(0, 1, "mock_label")
         self.presenter.model.add_dataset.assert_called_once_with(0, 1, "mock_label")
 

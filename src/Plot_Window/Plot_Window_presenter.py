@@ -8,6 +8,10 @@ class PlotWindowPresenter(object):
         self.model = model
         self._initialise_signals()
         self.setup_user_input()
+        self.setup_messengers()
+
+    def setup_messengers(self):
+        self.model.open_file_messenger.setup(self.open_file_done)
 
     def setup_user_input(self):
         self.plot_large_input = None
@@ -22,16 +26,19 @@ class PlotWindowPresenter(object):
         if self.plot_large_input is not None:
             return
         self.plot_large_input = PlotDataUserInput()
-        self.plot_large_input.done_button_slot(self.handle_plot_data)
+        self.plot_large_input.done_button_slot(self.call_handle_plot)
 
-    def handle_plot_data(self):
+    def call_handle_plot(self):
         parameters = self.plot_large_input.get_input()
-        x, y = self.model.open_file(parameters["filename"], parameters["filetype"], parameters["row"], parameters["column"])
         label = parameters["label"]
-        self.plot(x, y, label)
-        self.model.add_dataset(x, y, label)
+        self.model.open_file(parameters["filename"], parameters["filetype"], parameters["row"], parameters["column"],
+                             label)
         self.plot_large_input = None
 
+    def open_file_done(self):
+        x, y, label = self.model.get_from_queue()
+        self.plot(x, y, label)
+        self.model.add_dataset(x, y, label)
 
     def fit_data(self):
         print("in fitting")
