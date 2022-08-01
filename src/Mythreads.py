@@ -42,6 +42,7 @@ class MyThread(object):
             try:
                 return_val = func(self, *args, **kwargs)
                 self._queue.put(return_val)
+                self.thread_success()
 
             except Exception as error:
                 print("In exception")
@@ -88,6 +89,9 @@ class MyThread(object):
             self.after_thread()
 
     def incase_of_error(self, exception):
+        raise NotImplementedError
+
+    def thread_success(self):
         raise NotImplementedError
 
 

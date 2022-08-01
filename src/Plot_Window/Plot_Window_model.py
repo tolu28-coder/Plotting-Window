@@ -40,9 +40,10 @@ class PlotWindowModel(MyThread):
         return self.datasets[label]
 
     def before_thread(self):
-        print("In before thread")
+        #print("In before thread")
+        pass
 
-    def after_thread(self):
+    def thread_success(self):
         self.open_file_messenger.notify()
 
     def incase_of_error(self, exception):
@@ -51,6 +52,9 @@ class PlotWindowModel(MyThread):
 
     def get_from_queue(self):
         return self._queue.get()
+
+    def after_thread(self):
+        pass
 
 class Dataset(object):
 
