@@ -38,9 +38,10 @@ class PlotWindowPresenter(object):
         self.plot_large_input = None
 
     def open_file_done(self):
-        x, y, label = self.model.get_from_queue()
+        label = self.model.get_from_queue()
+        dataset= self.model.get_dataset(label)
+        x, y = dataset.get_data()
         self.plot(x, y, label)
-        self.model.add_dataset(x, y, label)
 
     def fit_data(self):
         if self.fit_large_input is not None:
@@ -55,7 +56,10 @@ class PlotWindowPresenter(object):
         self.fit_large_input = None
 
     def fit_data_done(self):
-        x, y, popt, label = self.model.get_from_queue()
+        name = self.model.get_from_queue()
+        fitted_data = self.model.get_fitted_data(name)
+        x, y = fitted_data.get_data()
+        label = fitted_data.plot_label
         # popt not yet used
         self.plot(x, y, label)
 

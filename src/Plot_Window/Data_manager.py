@@ -24,9 +24,9 @@ class DataManager(object):
     def clear_data(self):
         self.datasets = {}
 
-    def open_text_file(self, file, skiprow, columns):
+    def open_text_file(self, file, skiprow, columns, label):
         data = np.loadtxt(file, skiprows=skiprow)
         x, y = data[:, columns[0]], data[:, columns[1]]
-        return x, y
+        self.datasets[label] = Dataset(x, y, label)
 
 

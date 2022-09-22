@@ -6,6 +6,7 @@ from Data_structures import Dataset
 from Plot_Window.Data_manager import DataManager
 from Plot_Window.Fitting_manager import FittingManager
 
+
 TEXT_FILE_FORMAT = ["txt", "csv"]
 NUMBER_OF_AFTER_THREAD_METHODS = 1
 NUMBER_OF_BEFORE_THREAD_METHODS = 1
@@ -33,20 +34,15 @@ class PlotWindowModel(MyThread):
     @MyThread.thread_padding_return(0,  0,  0,  0)
     def open_file(self, file_name, filetype, skiprow, columns, label):
         if filetype in TEXT_FILE_FORMAT:
-            x, y = self.open_text_file(file_name, skiprow, columns)
+            self.data_manager.open_text_file(file_name, skiprow, columns, label)
         else:
             raise NotImplementedError
-        return x, y, label
+        return label
 
     @MyThread.thread_padding_return(0,  1,  0,  0)
     def fit_data(self, dataset_name, function, p0):
-        func = FIT_FUNCTIONS[function]
-        dataset = self.data_manager[dataset_name]
-        x, y = dataset.get_data()
-        popt, pcov = curve_fit(func, x, y, p0)
-        # perr will be used later, error in fitting parameters
-        perr = np.sqrt(np.diag(pcov))
-        return x, func(x, *popt), popt, dataset_name + "_fitted_function"
+        self.fitting_manager.fit(dataset_name, function, p0)
+        return dataset_name
 
 
     def open_text_file(self, file, skiprow, columns):
@@ -65,6 +61,9 @@ class PlotWindowModel(MyThread):
 
     def get_dataset(self, label):
         return self.data_manager[label]
+
+    def get_fitted_data(self, label):
+        return self.fitting_manager[label]
 
     @MyThread.add_to_list(_execute_before_thread, 0)
     def before_thread(self):
