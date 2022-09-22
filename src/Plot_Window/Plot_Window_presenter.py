@@ -1,4 +1,4 @@
-from UserInputWidgets.Large_user_input import PlotDataUserInput
+from UserInputWidgets.Large_user_input import PlotDataUserInput, FitDataUserInput
 
 
 class PlotWindowPresenter(object):
@@ -12,9 +12,11 @@ class PlotWindowPresenter(object):
 
     def setup_messengers(self):
         self.model.open_file_messenger.setup(self.open_file_done)
+        self.model.fit_data_messenger.setup(self.fit_data_done)
 
     def setup_user_input(self):
         self.plot_large_input = None
+        self.fit_large_input = None
 
     def _initialise_signals(self):
         self.view.plot_data_slot(self.plot_data)
@@ -36,12 +38,30 @@ class PlotWindowPresenter(object):
         self.plot_large_input = None
 
     def open_file_done(self):
-        x, y, label = self.model.get_from_queue()
+        label = self.model.get_from_queue()
+        dataset= self.model.get_dataset(label)
+        x, y = dataset.get_data()
         self.plot(x, y, label)
-        self.model.add_dataset(x, y, label)
 
     def fit_data(self):
-        print("in fitting")
+        if self.fit_large_input is not None:
+            return
+        self.fit_large_input = FitDataUserInput(None, self.model.get_list_of_datasets_present())
+        self.fit_large_input.done_button_slot(self.call_handle_fit)
+
+    def call_handle_fit(self):
+        parameters = self.fit_large_input.get_input()
+        # range_min and range_max not yet implemented
+        self.model.fit_data(parameters["dataset"], parameters["function"], parameters["initial"])
+        self.fit_large_input = None
+
+    def fit_data_done(self):
+        name = self.model.get_from_queue()
+        fitted_data = self.model.get_fitted_data(name)
+        x, y = fitted_data.get_data()
+        label = fitted_data.plot_label
+        # popt not yet used
+        self.plot(x, y, label)
 
     def plot_custom_data(self):
         print("in custom data")
