@@ -6,7 +6,7 @@ in python using GUI library QT. Numpy and Scipy libraries are utilised for short
 computation times. 
 
 ## Functionality
-![Image of plotting window gui](res/plotting_window.JPG)
+![Image of plotting window gui](res/plotting_window_2.JPG)
 
 ### Plotting
 
