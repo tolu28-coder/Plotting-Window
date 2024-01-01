@@ -3,7 +3,7 @@ from functions import FIT_FUNCTIONS
 from Data_structures import FittedData
 from scipy.optimize import curve_fit
 
-
+## Add background to the fitting
 class FittingManager(object):
 
     def __init__(self, data_manager):

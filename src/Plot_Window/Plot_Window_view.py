@@ -1,18 +1,25 @@
 from qtpy import QtWidgets
 
 from Plot_GUI.Plot_GUI_view import SingleMplCanvas
+from Data_manager_GUI.Data_Manger_GUI_View import DataManagerGUIView
 
 
 class PlotWindowView(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super(PlotWindowView, self).__init__(parent)
-        self.overall_layout = QtWidgets.QVBoxLayout(self)
+        # vertical layout contains Plot and menubar
+        self.vertical_layout = QtWidgets.QVBoxLayout()
+        # horizontal layout contains vertical layout and datamanager (for now)
+        self.horizontal_layout = QtWidgets.QHBoxLayout()
+        self.data_manager_gui = DataManagerGUIView(self)
         self._createMenuBar()
         self.plot_canvas = SingleMplCanvas(self)
-        self.overall_layout.addWidget(self.menuBar)
-        self.overall_layout.addWidget(self.plot_canvas)
-        self.setLayout(self.overall_layout)
+        self.vertical_layout.addWidget(self.menuBar)
+        self.vertical_layout.addWidget(self.plot_canvas)
+        self.horizontal_layout.addLayout(self.vertical_layout)
+        self.horizontal_layout.addWidget(self.data_manager_gui)
+        self.setLayout(self.horizontal_layout)
 
     # slots
     def plot_data_slot(self, slot):
@@ -59,4 +66,10 @@ class PlotWindowView(QtWidgets.QWidget):
         pass
 
     def plot(self, x, y, label=None):
-        self.plot_canvas.plot(x, y, label)
+       return self.plot_canvas.plot(x, y, label)
+
+    def add_record_to_datamanager(self):
+        pass
+
+    def remove_line(self, line):
+        self.plot_canvas.remove_line(line)

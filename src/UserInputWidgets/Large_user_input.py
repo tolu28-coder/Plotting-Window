@@ -61,12 +61,16 @@ class FitDataUserInput(LargeInput):
         self.datasets_input.add_options(available_datasets)
         self.function_input = UserInputCombobox(self, "Select function")
         self.function_input.add_options(FIT_FUNCTIONS.keys())
+        self.function_input.index_changed_signal(lambda i: self.function_input_changed())
+        self.function_description_label = QtWidgets.QLabel(self)
         self.range_min_input = UserInputText(self, "Input beginning of fit range")
         self.range_max_input = UserInputText(self, "Input end of fit range")
         self.intial_param_input = UserInputText(self, "Intial guess for fitting parameters")
+        self.function_input_changed()
 
         self.layout.addWidget(self.datasets_input)
         self.layout.addWidget(self.function_input)
+        self.layout.addWidget(self.function_description_label)
         self.layout.addWidget(self.range_min_input)
         self.layout.addWidget(self.range_max_input)
         self.layout.addWidget(self.intial_param_input)
@@ -74,8 +78,15 @@ class FitDataUserInput(LargeInput):
 
     def get_input(self):
         initial = self.intial_param_input.get_input()
-        initial = [float(x) for x in initial.split(",")]
+        initial = [float(x) if x else 0 for x in initial.split(",")]
         parameters = {"dataset": self.datasets_input.get_input(), "function": self.function_input.get_input(),
                       "range": [self.range_min_input.get_input(), self.range_max_input.get_input()],
                       "initial": initial}
         return parameters
+
+    def function_input_changed(self):
+        function_name = self.function_input.get_input()
+        function = FIT_FUNCTIONS[function_name]
+        text = function.get_description()
+        self.function_description_label.setText(text)
+
