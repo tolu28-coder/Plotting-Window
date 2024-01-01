@@ -8,6 +8,8 @@ class Dataset(object):
         self.ydata = y
         self.label = label
         self.fit = None
+        self.is_plotted = True
+        self.plot_fitted = False
 
     def get_data(self):
         return self.xdata, self.ydata
@@ -26,9 +28,14 @@ class Dataset(object):
     @property
     def fitted_data(self):
         if self.fit is None:
-            raise Exception("Fitted data does not exist")
+            raise Exception("Fitted data does not exist for" + self.label)
         else:
             return self.fit
+
+    @property
+    def is_plot_fitted(self):
+        return self.plot_fitted
+
 
 
 class FittedData(Dataset):
@@ -45,10 +52,46 @@ class FittedData(Dataset):
     def plot_label(self):
         return self.label+ "_fitted_data"
 
+
     def get_diff(self):
         return self.y_orig  - self.ydata
 
     @property
     def diff_label(self):
         return self.label + "_diff"
+
+    @property
+    def uncertainty(self):
+        return self.perr
+
+    @property
+    def is_fitted(self):
+        #return bool(self.fit)
+        NotImplementedError()
+
+    @property
+    def fitted_data(self):
+        #if self.fit is None:
+            #raise Exception("Fitted data does not exist")
+        #else:
+            #return self.fit
+        NotImplementedError()
+
+    def get_parameters(self):
+        params = self.function.parameters
+        text = ""
+        for i in range(len(params)):
+            a = "{}: {:4.3f} \n".format(params[i], self.parameters[i])
+            text += a
+        text = text[:-1]
+        return text
+
+    def get_errors(self):
+        params = self.function.parameters
+        text = ""
+        for i in range(len(params)):
+            a = "{}: {:4.3f} \n".format(params[i], self.perr[i])
+            text += a
+        text = text[:-1]
+        return text
 

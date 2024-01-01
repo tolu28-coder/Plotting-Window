@@ -1,4 +1,6 @@
 from UserInputWidgets.Large_user_input import PlotDataUserInput, FitDataUserInput
+from Data_manager_GUI.Data_Manager_GUI_presenter import DataManagerPresenter
+
 
 
 class PlotWindowPresenter(object):
@@ -6,6 +8,8 @@ class PlotWindowPresenter(object):
     def __init__(self, view, model):
         self.view = view
         self.model = model
+        self.data_manager_presenter = DataManagerPresenter(self.view.data_manager_gui, self.model.data_manager)
+        self.plot_index = {}
         self._initialise_signals()
         self.setup_user_input()
         self.setup_messengers()
@@ -13,6 +17,9 @@ class PlotWindowPresenter(object):
     def setup_messengers(self):
         self.model.open_file_messenger.setup(self.open_file_done)
         self.model.fit_data_messenger.setup(self.fit_data_done)
+
+        self.data_manager_presenter.plot_line_messenger.setup(self.plot)
+        self.data_manager_presenter.remove_line_messenger.setup(self.remove_line)
 
     def setup_user_input(self):
         self.plot_large_input = None
@@ -26,6 +33,7 @@ class PlotWindowPresenter(object):
 
     def plot_data(self):
         if self.plot_large_input is not None:
+            # make active
             return
         self.plot_large_input = PlotDataUserInput()
         self.plot_large_input.done_button_slot(self.call_handle_plot)
@@ -42,6 +50,7 @@ class PlotWindowPresenter(object):
         dataset= self.model.get_dataset(label)
         x, y = dataset.get_data()
         self.plot(x, y, label)
+        self.data_manager_presenter.add_row(dataset)
 
     def fit_data(self):
         if self.fit_large_input is not None:
@@ -62,6 +71,8 @@ class PlotWindowPresenter(object):
         label = fitted_data.plot_label
         # popt not yet used
         self.plot(x, y, label)
+        self.model.data_manager[name].plot_fitted = True
+        self.data_manager_presenter.update_table()
 
     def plot_custom_data(self):
         print("in custom data")
@@ -70,5 +81,11 @@ class PlotWindowPresenter(object):
         print("in remove background")
 
     def plot(self, x, y, label=""):
-        self.view.plot(x, y, label)
+        self.plot_index[label] = self.view.plot(x, y, label)[0]
+
+    def remove_line(self, label):
+        line = self.plot_index[label]
+        del self.plot_index[label]
+        self.view.remove_line(line)
+
 

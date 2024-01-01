@@ -10,9 +10,9 @@ class SinglePlot(object):
 
     def plot(self, x, y, label=None):
         if label is None:
-            self.axes.plot(x, y)
+            return self.axes.plot(x, y)
         else:
-            self.axes.plot(x, y, label=label)
+            return self.axes.plot(x, y, label=label)
 
     def set_xlabel(self, label):
         pass
@@ -22,6 +22,9 @@ class SinglePlot(object):
 
     def set_title(self, title):
         self.axes.set_title(title)
+
+    def remove_line(self, line):
+        self.axes.lines.remove(line)
 
 
 # Multiplot will have multiple axis and will bee implemented later

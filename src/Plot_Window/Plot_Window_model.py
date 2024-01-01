@@ -1,13 +1,10 @@
 import numpy as np
-from scipy.optimize import curve_fit
 from Mythreads import MyThread, Messenger
-from functions import FIT_FUNCTIONS
-from Data_structures import Dataset
-from Plot_Window.Data_manager import DataManager
-from Plot_Window.Fitting_manager import FittingManager
+from Data_manager import DataManager
+from Fitting_manager import FittingManager
 
 
-TEXT_FILE_FORMAT = ["txt", "csv"]
+TEXT_FILE_FORMAT = ["txt"]#, "csv"]
 NUMBER_OF_AFTER_THREAD_METHODS = 1
 NUMBER_OF_BEFORE_THREAD_METHODS = 1
 NUMBER_OF_IF_ERROR_THREAD_METHODS = 1
@@ -35,6 +32,9 @@ class PlotWindowModel(MyThread):
     def open_file(self, file_name, filetype, skiprow, columns, label):
         if filetype in TEXT_FILE_FORMAT:
             self.data_manager.open_text_file(file_name, skiprow, columns, label)
+
+        elif filetype == "csv":
+            self.data_manager.open_csv_file(file_name, skiprow, columns, label)
         else:
             raise NotImplementedError
         return label

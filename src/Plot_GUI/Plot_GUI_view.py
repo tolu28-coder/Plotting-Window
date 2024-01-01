@@ -24,9 +24,10 @@ class SingleMplCanvas(QtWidgets.QWidget):
         self.setLayout(layout)
 
     def plot(self, x, y, label=None):
-        self.plot_object.plot(x, y, label)
+        line = self.plot_object.plot(x, y, label)
         self.axes.legend()
         self.canvas.draw()
+        return line
 
     def set_title(self, title):
         self.plot_object.set_title(title)
@@ -37,6 +38,9 @@ class SingleMplCanvas(QtWidgets.QWidget):
     def set_ylabel(self, label):
         pass
 
+    def remove_line(self, line):
+        self.plot_object.remove_line(line)
+        self.canvas.draw()
 
 class MutliplotMplCanvas(QtWidgets.QWidget):
 

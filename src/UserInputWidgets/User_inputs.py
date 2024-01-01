@@ -62,10 +62,13 @@ class UserInputCombobox(UserInput):
         self.combobox.addItems(values)
 
     def set_input(self, index):
-        pass
+        self.combobox.setCurrentIndex(index)
 
     def get_input(self):
         return self.combobox.currentText()
+
+    def index_changed_signal(self, function):
+        self.combobox.currentIndexChanged.connect(function)
 
 
 class UserInputFileDirectory(UserInputText):
